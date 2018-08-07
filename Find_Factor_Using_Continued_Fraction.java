@@ -6,11 +6,12 @@ import java.util.Date;
 
 public class Find_Factor_Using_Continued_Fraction {
     public static void main(String[] args) {
-        Date start_time =  new Date(); //开始时间
-        final int scale = 50;
 
+        final int scale = 20; // 设置做大数除法时的保留小数点后的位数
         // 计算N
-        BigInteger N = new BigInteger("2").pow(101).subtract(BigInteger.ONE);
+        BigInteger N = new BigInteger("2").pow(83).subtract(BigInteger.ONE);
+        // 开始计时
+        Date start_time =  new Date(); //开始时间
         BigDecimal sqrt_N = Sqrt(N);
 
         // 初始化P_{k},Q_{k}序列
@@ -43,50 +44,29 @@ public class Find_Factor_Using_Continued_Fraction {
             }
 
             // 分解因式
-            if(i%2==0 && is_square(seq_Q)){
-
+            if(i%2==0) {
                 BigInteger s = Sqrt(seq_Q).toBigInteger();
-                BigInteger factor0 = N.gcd(seq_p[1].subtract(s));
-                BigInteger factor1 = N.gcd(seq_p[1].add(s));
+                if (s.pow(2).equals(seq_Q)) { // 判断seq_Q是否为完全平方数
 
-                if(factor0.compareTo(BigInteger.ONE) != 0 && factor1.compareTo(BigInteger.ONE) != 0){
-                    System.out.println(String.format("第%d项：%s,%s", i,factor0,factor1));
-                    Date end_time1 =  new Date(); // 结束时间
-                    Long cost_time1 = end_time1.getTime()-start_time.getTime();  // 计算时间，返回毫秒数
-                    System.out.println(String.format("程序运行完毕！耗时：%.3fs.", cost_time1*1.0/1000));
-                    break;
+                    BigInteger factor0 = N.gcd(seq_p[1].subtract(s));
+                    BigInteger factor1 = N.gcd(seq_p[1].add(s));
+
+                    if (factor0.compareTo(BigInteger.ONE) != 0 && factor1.compareTo(BigInteger.ONE) != 0) {
+                        System.out.println(String.format("第%d项：%s,%s", i, factor0, factor1));
+                        Date end_time1 = new Date(); // 结束时间
+                        Long cost_time1 = end_time1.getTime() - start_time.getTime();  // 计算时间，返回毫秒数
+                        System.out.println(String.format("程序运行完毕！耗时：%.3fs.", cost_time1 * 1.0 / 1000));
+                        break;
+                    }
                 }
             }
 
             if(i%10000 == 0)
                 System.out.println(String.format("已运行到第%d项", i));
 
-            i += 1;
+            i++;
 
         }
-
-    }
-
-    // 判断是否为完全平方数
-    public static boolean is_square(BigInteger s){
-        // 牛顿法求解平方根, 求解a的平方根
-        // x为a的平方根，x的初始值为1， 按x = (x+a/x)/2迭代， 误差为error
-        // 若取初始值x0=1, 则当a>1时, 由数学归纳法知, xn > sqrt(a), n>1, 且xn递减
-        BigDecimal x = BigDecimal.ONE;
-        BigDecimal a = new BigDecimal(s.toString());
-        BigDecimal eps = new BigDecimal("1");
-        final BigDecimal error = new BigDecimal("1E-10");
-        int scale = 50;
-
-        // 进入循环
-        while(eps.compareTo(error) == 1){ // eps > error
-            x = x.add(a.divide(x, scale, BigDecimal.ROUND_HALF_UP))
-                    .divide(new BigDecimal("2.0"), scale, BigDecimal.ROUND_HALF_UP);
-            eps = x.multiply(x).subtract(a).abs();
-        }
-
-        BigInteger sqrt = x.toBigInteger();
-        return sqrt.pow(2).equals(s)?true:false;
 
     }
 
@@ -98,8 +78,8 @@ public class Find_Factor_Using_Continued_Fraction {
         BigDecimal x = BigDecimal.ONE;
         BigDecimal a = new BigDecimal(s.toString());
         BigDecimal eps = new BigDecimal("1");
-        final BigDecimal error = new BigDecimal("1E-10");
-        int scale = 50;
+        final BigDecimal error = new BigDecimal("0.001");
+        int scale = 20;
 
         // 进入循环
         while(eps.compareTo(error) == 1){ // eps > error
@@ -113,8 +93,8 @@ public class Find_Factor_Using_Continued_Fraction {
 
 /*
  * 运行结果:
- * 2**67-1: 0.6s
- * 2**71-1: 3.5s
- * 2**79-1: 2.0s
- * 2**83-1: 55.3s
+ * 2**67-1: 0.567s, 因子为193707721,761838257287
+ * 2**71-1: 2.941s, 因子为10334355636337793,228479
+ * 2**79-1: 1.718s, 因子为224958284260258499201,2687
+ * 2**83-1: 52.2s,  因子为167,57912614113275649087721
  */
