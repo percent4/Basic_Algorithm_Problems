@@ -9,7 +9,7 @@ public class Find_Factor_Using_Continued_Fraction {
 
         final int scale = 20; // 设置做大数除法时的保留小数点后的位数
         // 计算N
-        BigInteger N = new BigInteger("2").pow(83).subtract(BigInteger.ONE);
+        BigInteger N = new BigInteger("2").pow(97).subtract(BigInteger.ONE);
         // 开始计时
         Date start_time =  new Date(); //开始时间
         BigDecimal sqrt_N = Sqrt(N);
@@ -93,8 +93,10 @@ public class Find_Factor_Using_Continued_Fraction {
 
 /*
  * 运行结果:
+ * 2**59-1: 3.557s, 因子为3203431780337,179951
  * 2**67-1: 0.567s, 因子为193707721,761838257287
  * 2**71-1: 2.941s, 因子为10334355636337793,228479
+ * 2**73-1: 7.097s, 因子为2298041,4109906205215351
  * 2**79-1: 1.718s, 因子为224958284260258499201,2687
  * 2**83-1: 52.2s,  因子为167,57912614113275649087721
  */
